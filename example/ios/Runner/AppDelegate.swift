@@ -14,7 +14,7 @@ import Braintree
     
     
     override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        if url.scheme == "com.example.flutterBraintreeExample.payments" {
+        if url.scheme?.caseInsensitiveCompare("com.example.flutterBraintreeExample.payments") == .some(.orderedSame) {
             return BTAppSwitch.handleOpen(url, options:options)
         }
         
