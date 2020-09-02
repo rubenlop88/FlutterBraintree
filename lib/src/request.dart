@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class BraintreeDropInRequest {
   BraintreeDropInRequest({
     this.clientToken,
@@ -86,6 +88,7 @@ class BraintreeCreditCardRequest {
     this.cardNumber,
     this.expirationMonth,
     this.expirationYear,
+    this.cvv,
   });
 
   /// Number shown on the credit card.
@@ -97,10 +100,13 @@ class BraintreeCreditCardRequest {
   /// Four didgit expiration year, e.g. `'2021'`.
   String expirationYear;
 
+  String cvv;
+
   Map<String, dynamic> toJson() => {
         if (cardNumber != null) 'cardNumber': cardNumber,
         if (expirationMonth != null) 'expirationMonth': expirationMonth,
         if (expirationYear != null) 'expirationYear': expirationYear,
+        if (cvv != null) 'cvv': cvv,
       };
 }
 
@@ -200,4 +206,35 @@ class BraintreeApplePayRequest {
         if (countryCode != null) 'countryCode': countryCode,
         if (appleMerchantID != null) 'appleMerchantID': appleMerchantID,
       };
+}
+
+class BraintreeThreeDSecureRequest {
+  final String amount;
+  final String nonce;
+
+  BraintreeThreeDSecureRequest({
+    this.amount,
+    this.nonce,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'amount': amount,
+      'nonce': nonce,
+    };
+  }
+
+  factory BraintreeThreeDSecureRequest.fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+
+    return BraintreeThreeDSecureRequest(
+      amount: map['amount'],
+      nonce: map['nonce'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory BraintreeThreeDSecureRequest.fromJson(String source) =>
+      BraintreeThreeDSecureRequest.fromMap(json.decode(source));
 }

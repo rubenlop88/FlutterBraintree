@@ -33,6 +33,15 @@ open class BaseFlutterBraintreePlugin: NSObject {
         ];
     }
     
+    internal func buildCardNonceDict(nonce: BTPaymentMethodNonce?) -> [String: Any?] {
+        [
+            "nonce": nonce?.nonce,
+            "typeLabel": nonce?.type,
+            "description": nonce?.localizedDescription,
+            "isDefault": nonce?.isDefault
+        ];
+    }
+    
     internal func returnAuthorizationMissingError (result: FlutterResult) {
         result(FlutterError(code: "braintree_error", message: "Authorization not specified (no clientToken or tokenizationKey)", details: nil))
     }

@@ -48,19 +48,20 @@ class _MyAppState extends State<MyApp> {
             RaisedButton(
               onPressed: () async {
                 var request = BraintreeDropInRequest(
-                  tokenizationKey: tokenizationKey,
-                  collectDeviceData: true,
-                  googlePaymentRequest: BraintreeGooglePaymentRequest(
-                    totalPrice: '4.20',
-                    currencyCode: 'USD',
-                    billingAddressRequired: false,
-                  ),
-                  paypalRequest: BraintreePayPalRequest(
-                    amount: '4.20',
-                    displayName: 'Example company',
-                  ),
-                  cardEnabled: true,
-                );
+                    tokenizationKey: tokenizationKey,
+                    collectDeviceData: true,
+                    googlePaymentRequest: BraintreeGooglePaymentRequest(
+                      totalPrice: '4.20',
+                      currencyCode: 'USD',
+                      billingAddressRequired: false,
+                    ),
+                    paypalRequest: BraintreePayPalRequest(
+                      amount: '4.20',
+                      displayName: 'Example company',
+                    ),
+                    cardEnabled: true,
+                    amount: '12.13',
+                    requestThreeDSecureVerification: true);
                 BraintreeDropInResult result =
                     await BraintreeDropIn.start(request);
                 if (result != null) {
@@ -86,6 +87,33 @@ class _MyAppState extends State<MyApp> {
                 }
               },
               child: Text('TOKENIZE CREDIT CARD'),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                final request = BraintreeCreditCardRequest(
+                    cardNumber: '4111111111111111',
+                    expirationMonth: '12',
+                    expirationYear: '2021',
+                    cvv: '123');
+
+                BraintreePaymentMethodNonce tokenizeResult =
+                    await Braintree.tokenizeCreditCard(
+                  tokenizationKey,
+                  request,
+                );
+
+                final threeDSRequest = BraintreeThreeDSecureRequest(
+                    amount: '12.12', nonce: tokenizeResult.nonce);
+
+                BraintreePaymentMethodNonce result =
+                    await Braintree.requestThreeDSNonce(
+                        tokenizationKey, threeDSRequest);
+
+                if (result != null) {
+                  showNonce(result);
+                }
+              },
+              child: Text('TOKENIZE CREDIT CARD + 3DS'),
             ),
             RaisedButton(
               onPressed: () async {

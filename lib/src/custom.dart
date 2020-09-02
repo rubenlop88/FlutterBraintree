@@ -47,4 +47,17 @@ class Braintree {
     });
     return BraintreePaymentMethodNonce.fromJson(result);
   }
+
+  static Future<BraintreePaymentMethodNonce> requestThreeDSNonce(
+    String authorization,
+    BraintreeThreeDSecureRequest request,
+  ) async {
+    assert(authorization != null);
+    assert(request != null);
+    final result = await _kChannel.invokeMethod('threeDSecure', {
+      'authorization': authorization,
+      'request': request.toMap(),
+    });
+    return BraintreePaymentMethodNonce.fromJson(result);
+  }
 }
