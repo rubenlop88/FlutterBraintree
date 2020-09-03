@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.Card;
 import com.braintreepayments.api.PayPal;
+import com.braintreepayments.api.ThreeDSecure;
 import com.braintreepayments.api.exceptions.InvalidArgumentException;
 import com.braintreepayments.api.interfaces.BraintreeCancelListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
@@ -15,6 +16,8 @@ import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PayPalRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.braintreepayments.api.models.ThreeDSecureLookup;
+import com.braintreepayments.api.models.ThreeDSecureRequest;
 
 import java.util.HashMap;
 
@@ -33,6 +36,8 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
                 tokenizeCreditCard();
             } else if (type.equals("requestPaypalNonce")) {
                 requestPaypalNonce();
+            } else if (type.equals("threeDSecure")) {
+                threeDSecureRequest();
             } else {
                 throw new Exception("Invalid request type: " + type);
             }
@@ -45,12 +50,24 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
         }
     }
 
+    protected void threeDSecureRequest() {
+        Intent intent = getIntent();
+
+        ThreeDSecureRequest threeDSecureRequest = new ThreeDSecureRequest()
+                .amount(intent.getStringExtra("amount"))
+                .nonce(intent.getStringExtra("nonce"));
+
+        ThreeDSecure.performVerification(braintreeFragment, threeDSecureRequest);
+    }
+
     protected void tokenizeCreditCard() {
         Intent intent = getIntent();
         CardBuilder builder = new CardBuilder()
                 .cardNumber(intent.getStringExtra("cardNumber"))
                 .expirationMonth(intent.getStringExtra("expirationMonth"))
-                .expirationYear(intent.getStringExtra("expirationYear"));
+                .expirationYear(intent.getStringExtra("expirationYear"))
+                .cvv(intent.getStringExtra("cvv"));
+
         Card.tokenize(braintreeFragment, builder);
     }
 
