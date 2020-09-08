@@ -108,6 +108,20 @@ class BraintreeCreditCardRequest {
         if (expirationYear != null) 'expirationYear': expirationYear,
         if (cvv != null) 'cvv': cvv,
       };
+
+  BraintreeCreditCardRequest copyWith({
+    String cardNumber,
+    String expirationMonth,
+    String expirationYear,
+    String cvv,
+  }) {
+    return BraintreeCreditCardRequest(
+      cardNumber: cardNumber ?? this.cardNumber,
+      expirationMonth: expirationMonth ?? this.expirationMonth,
+      expirationYear: expirationYear ?? this.expirationYear,
+      cvv: cvv ?? this.cvv,
+    );
+  }
 }
 
 class BraintreeGooglePaymentRequest {

@@ -3,6 +3,7 @@ package com.example.flutter_braintree;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.braintreepayments.api.dropin.DropInActivity;
 import com.braintreepayments.api.dropin.DropInRequest;
@@ -97,7 +98,11 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
             intent.putExtra("cardNumber", (String) request.get("cardNumber"));
             intent.putExtra("expirationMonth", (String) request.get("expirationMonth"));
             intent.putExtra("expirationYear", (String) request.get("expirationYear"));
-            intent.putExtra("cvv", (String) request.get("cvv"));
+
+            if (request.get("cvv") != null) {
+                intent.putExtra("cvv", (String) request.get("cvv"));
+            }
+
             activity.startActivityForResult(intent, CUSTOM_ACTIVITY_REQUEST_CODE);
         } else if (call.method.equals("requestPaypalNonce")) {
             String authorization = call.argument("authorization");
