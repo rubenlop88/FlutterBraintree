@@ -40,7 +40,11 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
             let amount = requestInfo["amount"] as? String;
             
             if amount == nil {
-                driver.authorizeAccount { (nonce, error) in
+                let vaultRequest = BTPayPalRequest()
+                vaultRequest.billingAgreementDescription = requestInfo["billingAgreementDescription"] as? String;
+                vaultRequest.displayName = requestInfo["displayName"] as? String;
+                
+                driver.requestBillingAgreement(vaultRequest) { (nonce, error) in
                     self.handleResult(nonce: nonce, error: error, flutterResult: result)
                     self.isHandlingResult = false
                 }
