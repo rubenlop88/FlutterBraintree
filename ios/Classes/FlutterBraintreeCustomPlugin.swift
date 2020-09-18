@@ -70,6 +70,8 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
                               expirationYear: (cardRequestInfo["expirationYear"] as? String)!,
                               cvv: (cardRequestInfo["cvv"] as? String))
             
+            card.shouldValidate = false
+            
             cardClient.tokenizeCard(card) { (nonce, error) in
                 self.handleResult(nonce: nonce, error: error, flutterResult: result)
                 self.isHandlingResult = false

@@ -8,8 +8,11 @@ import android.util.Log;
 import com.braintreepayments.api.dropin.DropInActivity;
 import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.api.dropin.DropInResult;
+import com.braintreepayments.api.exceptions.BraintreeError;
+import com.braintreepayments.api.exceptions.ErrorWithResponse;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 
+import java.util.List;
 import java.util.Map;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -151,7 +154,14 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
                     activeResult.success(null);
                 } else {
                     Exception error = (Exception) data.getSerializableExtra("error");
-                    activeResult.error("error", error.getMessage(), null);
+                    String message = error.getMessage();
+
+                    try {
+                        ErrorWithResponse errorWithResponse = (ErrorWithResponse) error;
+                        message = errorWithResponse.getLocalizedMessage();
+                    } catch (ClassCastException ignored) {}
+
+                    activeResult.error("error", message, null);
                 }
                 activeResult = null;
                 return true;
