@@ -96,11 +96,14 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
             Intent intent = new Intent(activity, FlutterBraintreeCustom.class);
             intent.putExtra("type", "tokenizeCreditCard");
             intent.putExtra("authorization", (String) call.argument("authorization"));
+
             assert (call.argument("request") instanceof Map);
+
             Map request = (Map) call.argument("request");
             intent.putExtra("cardNumber", (String) request.get("cardNumber"));
             intent.putExtra("expirationMonth", (String) request.get("expirationMonth"));
             intent.putExtra("expirationYear", (String) request.get("expirationYear"));
+            intent.putExtra("shouldValidate", (Boolean) request.get("shouldValidate"));
 
             if (request.get("cvv") != null) {
                 intent.putExtra("cvv", (String) request.get("cvv"));

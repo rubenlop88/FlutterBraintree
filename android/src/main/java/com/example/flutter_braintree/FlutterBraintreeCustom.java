@@ -66,7 +66,7 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
                 .cardNumber(intent.getStringExtra("cardNumber"))
                 .expirationMonth(intent.getStringExtra("expirationMonth"))
                 .expirationYear(intent.getStringExtra("expirationYear"))
-                .validate(false);
+                .validate(intent.getBooleanExtra("shouldValidate", false));
 
         if (intent.getStringExtra("cvv") != null) {
             builder = builder.cvv(intent.getStringExtra("cvv"));

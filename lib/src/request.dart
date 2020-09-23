@@ -84,12 +84,12 @@ class BraintreeDropInRequest {
 }
 
 class BraintreeCreditCardRequest {
-  BraintreeCreditCardRequest({
-    this.cardNumber,
-    this.expirationMonth,
-    this.expirationYear,
-    this.cvv,
-  });
+  BraintreeCreditCardRequest(
+      {this.cardNumber,
+      this.expirationMonth,
+      this.expirationYear,
+      this.cvv,
+      this.shouldValidate});
 
   /// Number shown on the credit card.
   String cardNumber;
@@ -100,27 +100,32 @@ class BraintreeCreditCardRequest {
   /// Four didgit expiration year, e.g. `'2021'`.
   String expirationYear;
 
+  /// CVV verification, e.g. `'456'`.
   String cvv;
+
+  /// Should perform card validation
+  bool shouldValidate;
 
   Map<String, dynamic> toJson() => {
         if (cardNumber != null) 'cardNumber': cardNumber,
         if (expirationMonth != null) 'expirationMonth': expirationMonth,
         if (expirationYear != null) 'expirationYear': expirationYear,
         if (cvv != null) 'cvv': cvv,
+        if (shouldValidate != null) 'shouldValidate': shouldValidate,
       };
 
-  BraintreeCreditCardRequest copyWith({
-    String cardNumber,
-    String expirationMonth,
-    String expirationYear,
-    String cvv,
-  }) {
+  BraintreeCreditCardRequest copyWith(
+      {String cardNumber,
+      String expirationMonth,
+      String expirationYear,
+      String cvv,
+      bool shouldValidate}) {
     return BraintreeCreditCardRequest(
-      cardNumber: cardNumber ?? this.cardNumber,
-      expirationMonth: expirationMonth ?? this.expirationMonth,
-      expirationYear: expirationYear ?? this.expirationYear,
-      cvv: cvv ?? this.cvv,
-    );
+        cardNumber: cardNumber ?? this.cardNumber,
+        expirationMonth: expirationMonth ?? this.expirationMonth,
+        expirationYear: expirationYear ?? this.expirationYear,
+        cvv: cvv ?? this.cvv,
+        shouldValidate: shouldValidate ?? this.shouldValidate);
   }
 }
 
