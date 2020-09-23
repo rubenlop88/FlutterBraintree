@@ -7,11 +7,13 @@ import android.os.Bundle;
 
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.Card;
+import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.ThreeDSecure;
 import com.braintreepayments.api.exceptions.InvalidArgumentException;
 import com.braintreepayments.api.interfaces.BraintreeCancelListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
+import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PayPalRequest;
@@ -21,7 +23,7 @@ import com.braintreepayments.api.models.ThreeDSecureRequest;
 
 import java.util.HashMap;
 
-public class FlutterBraintreeCustom extends AppCompatActivity implements PaymentMethodNonceCreatedListener, BraintreeCancelListener, BraintreeErrorListener {
+public class FlutterBraintreeCustom extends AppCompatActivity implements PaymentMethodNonceCreatedListener, BraintreeCancelListener, BraintreeErrorListener, BraintreeResponseListener<String> {
     private BraintreeFragment braintreeFragment;
 
     @Override
@@ -38,6 +40,10 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
                 requestPaypalNonce();
             } else if (type.equals("threeDSecure")) {
                 threeDSecureRequest();
+            } else if (type.equals("requestDeviceData")) {
+                requestDeviceData();
+            } else if (type.equals("requestPayPalDeviceData")) {
+                requestPayPalDeviceData();
             } else {
                 throw new Exception("Invalid request type: " + type);
             }
@@ -48,6 +54,14 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
             finish();
             return;
         }
+    }
+
+    protected void requestDeviceData() {
+        DataCollector.collectDeviceData(braintreeFragment, this);
+    }
+
+    protected void requestPayPalDeviceData() {
+        DataCollector.collectPayPalDeviceData(braintreeFragment, this);
     }
 
     protected void threeDSecureRequest() {
@@ -118,6 +132,19 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
         Intent result = new Intent();
         result.putExtra("error", error);
         setResult(2, result);
+        finish();
+    }
+
+    @Override
+    public void onResponse(String deviceData) {
+        HashMap<String, Object> responseMap = new HashMap<String, Object>();
+        responseMap.put("deviceData", deviceData);
+
+        Intent result = new Intent();
+        result.putExtra("type", "deviceDataResponse");
+        result.putExtra("deviceData", responseMap);
+
+        setResult(RESULT_OK, result);
         finish();
     }
 }

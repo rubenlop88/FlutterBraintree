@@ -35,6 +35,22 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  void showDeviceData(BraintreeDeviceData deviceData) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Payment deviceData:'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Text('deviceData: ${deviceData.deviceData}'),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,6 +163,30 @@ class _MyAppState extends State<MyApp> {
                 }
               },
               child: Text('PAYPAL CHECKOUT FLOW'),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                final result = await Braintree.requestDeviceData(
+                  tokenizationKey,
+                );
+
+                if (result != null) {
+                  showDeviceData(result);
+                }
+              },
+              child: Text('REQUEST DEVICE DATA'),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                final result = await Braintree.requestPaypalDeviceData(
+                  tokenizationKey,
+                );
+
+                if (result != null) {
+                  showDeviceData(result);
+                }
+              },
+              child: Text('REQUEST PAYPAL DEVICE DATA'),
             ),
           ],
         ),

@@ -42,6 +42,12 @@ open class BaseFlutterBraintreePlugin: NSObject {
         ];
     }
     
+    internal func buildDeviceDataDict(deviceData: String) -> [String: Any?] {
+        [
+            "deviceData": deviceData,
+        ];
+    }
+    
     internal func returnAuthorizationMissingError (result: FlutterResult) {
         result(FlutterError(code: "braintree_error", message: "Authorization not specified (no clientToken or tokenizationKey)", details: nil))
     }

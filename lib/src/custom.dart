@@ -60,4 +60,28 @@ class Braintree {
     });
     return BraintreePaymentMethodNonce.fromJson(result);
   }
+
+  static Future<BraintreeDeviceData> requestDeviceData(
+    String authorization,
+  ) async {
+    assert(authorization != null);
+
+    final result = await _kChannel.invokeMethod('requestDeviceData', {
+      'authorization': authorization,
+    });
+
+    return BraintreeDeviceData.fromJson(result);
+  }
+
+  static Future<BraintreeDeviceData> requestPaypalDeviceData(
+    String authorization,
+  ) async {
+    assert(authorization != null);
+
+    final result = await _kChannel.invokeMethod('requestPayPalDeviceData', {
+      'authorization': authorization,
+    });
+
+    return BraintreeDeviceData.fromJson(result);
+  }
 }

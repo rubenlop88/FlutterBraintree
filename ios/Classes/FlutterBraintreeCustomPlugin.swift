@@ -116,9 +116,26 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
 //                }
             }
             
+        } else if call.method == "requestDeviceData" {
+            BTDataCollector(apiClient: client!).collectCardFraudData { deviceData in
+                self.handleDeviceDataResult(deviceData: deviceData, error: nil, flutterResult: result)
+                self.isHandlingResult = false
+            }
+        } else if call.method == "requestPayPalDeviceData" {
+            let deviceData = PPDataCollector.collectPayPalDeviceData()
+            handleDeviceDataResult(deviceData: deviceData, error: nil, flutterResult: result)
+            isHandlingResult = false
         } else {
             result(FlutterMethodNotImplemented)
             self.isHandlingResult = false
+        }
+    }
+    
+    private func handleDeviceDataResult(deviceData: String, error: Error?, flutterResult: FlutterResult) {
+        if error != nil {
+            returnBraintreeError(result: flutterResult, error: error!)
+        } else {
+            flutterResult(buildDeviceDataDict(deviceData: deviceData));
         }
     }
     
