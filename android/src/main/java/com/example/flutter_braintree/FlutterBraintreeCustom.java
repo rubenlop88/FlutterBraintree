@@ -18,9 +18,12 @@ import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.CardBuilder;
 import com.braintreepayments.api.models.PayPalRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
+import com.braintreepayments.api.models.ThreeDSecureAdditionalInformation;
 import com.braintreepayments.api.models.ThreeDSecureLookup;
+import com.braintreepayments.api.models.ThreeDSecurePostalAddress;
 import com.braintreepayments.api.models.ThreeDSecureRequest;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 public class FlutterBraintreeCustom extends AppCompatActivity implements PaymentMethodNonceCreatedListener, BraintreeCancelListener, BraintreeErrorListener, BraintreeResponseListener<String> {
@@ -69,7 +72,31 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
 
         ThreeDSecureRequest threeDSecureRequest = new ThreeDSecureRequest()
                 .amount(intent.getStringExtra("amount"))
+                .email(intent.getStringExtra("email"))
                 .nonce(intent.getStringExtra("nonce"));
+
+        HashMap<String, String> addressInfo = (HashMap<String, String>) intent.getSerializableExtra("address");
+
+        if (addressInfo != null) {
+            ThreeDSecurePostalAddress address = new ThreeDSecurePostalAddress()
+                    .givenName(addressInfo.get("givenName")) // ASCII-printable characters required, else will throw a validation error
+                    .surname(addressInfo.get("surname")) // ASCII-printable characters required, else will throw a validation error
+                    .phoneNumber(addressInfo.get("phoneNumber"))
+                    .streetAddress(addressInfo.get("streetAddress"))
+                    .extendedAddress(addressInfo.get("extendedAddress"))
+                    .locality(addressInfo.get("locality"))
+                    .region(addressInfo.get("region"))
+                    .postalCode(addressInfo.get("postalCode"))
+                    .countryCodeAlpha2(addressInfo.get("countryCodeAlpha"));
+
+            // For best results, provide as many additional elements as possible.
+            ThreeDSecureAdditionalInformation additionalInformation = new ThreeDSecureAdditionalInformation()
+                    .shippingAddress(address);
+
+            threeDSecureRequest = threeDSecureRequest
+                    .billingAddress(address)
+                    .additionalInformation(additionalInformation);
+        }
 
         ThreeDSecure.performVerification(braintreeFragment, threeDSecureRequest);
     }

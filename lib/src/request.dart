@@ -227,19 +227,127 @@ class BraintreeApplePayRequest {
       };
 }
 
+class BraintreeThreeDSecurePostalAddress {
+  final String givenName;
+  final String surname;
+  final String phoneNumber;
+  final String streetAddress;
+  final String extendedAddress;
+  final String locality;
+  final String region;
+  final String postalCode;
+  final String countryCodeAlpha;
+
+  BraintreeThreeDSecurePostalAddress({
+    this.givenName,
+    this.surname,
+    this.phoneNumber,
+    this.streetAddress,
+    this.extendedAddress,
+    this.locality,
+    this.region,
+    this.postalCode,
+    this.countryCodeAlpha,
+  });
+
+  BraintreeThreeDSecurePostalAddress copyWith({
+    String givenName,
+    String surname,
+    String phoneNumber,
+    String streetAddress,
+    String extendedAddress,
+    String locality,
+    String region,
+    String postalCode,
+    String countryCodeAlpha,
+  }) {
+    return BraintreeThreeDSecurePostalAddress(
+      givenName: givenName ?? this.givenName,
+      surname: surname ?? this.surname,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      streetAddress: streetAddress ?? this.streetAddress,
+      extendedAddress: extendedAddress ?? this.extendedAddress,
+      locality: locality ?? this.locality,
+      region: region ?? this.region,
+      postalCode: postalCode ?? this.postalCode,
+      countryCodeAlpha: countryCodeAlpha ?? this.countryCodeAlpha,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'givenName': givenName,
+      'surname': surname,
+      'phoneNumber': phoneNumber,
+      'streetAddress': streetAddress,
+      'extendedAddress': extendedAddress,
+      'locality': locality,
+      'region': region,
+      'postalCode': postalCode,
+      'countryCodeAlpha': countryCodeAlpha,
+    };
+  }
+
+  factory BraintreeThreeDSecurePostalAddress.fromMap(Map<String, dynamic> map) {
+    if (map == null) return null;
+
+    return BraintreeThreeDSecurePostalAddress(
+      givenName: map['givenName'],
+      surname: map['surname'],
+      phoneNumber: map['phoneNumber'],
+      streetAddress: map['streetAddress'],
+      extendedAddress: map['extendedAddress'],
+      locality: map['locality'],
+      region: map['region'],
+      postalCode: map['postalCode'],
+      countryCodeAlpha: map['countryCodeAlpha'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory BraintreeThreeDSecurePostalAddress.fromJson(String source) =>
+      BraintreeThreeDSecurePostalAddress.fromMap(json.decode(source));
+
+  @override
+  String toString() {
+    return 'BraintreeThreeDSecurePostalAddress(givenName: $givenName, surname: $surname, phoneNumber: $phoneNumber, streetAddress: $streetAddress, extendedAddress: $extendedAddress, locality: $locality, region: $region, postalCode: $postalCode, countryCodeAlpha: $countryCodeAlpha)';
+  }
+}
+
 class BraintreeThreeDSecureRequest {
   final String amount;
   final String nonce;
+  final String email;
+  final BraintreeThreeDSecurePostalAddress address;
 
   BraintreeThreeDSecureRequest({
     this.amount,
     this.nonce,
+    this.email,
+    this.address,
   });
+
+  BraintreeThreeDSecureRequest copyWith({
+    String amount,
+    String nonce,
+    String email,
+    BraintreeThreeDSecurePostalAddress address,
+  }) {
+    return BraintreeThreeDSecureRequest(
+      amount: amount ?? this.amount,
+      nonce: nonce ?? this.nonce,
+      email: email ?? this.email,
+      address: address ?? this.address,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
       'amount': amount,
       'nonce': nonce,
+      'email': email,
+      'address': address?.toMap(),
     };
   }
 
@@ -249,6 +357,8 @@ class BraintreeThreeDSecureRequest {
     return BraintreeThreeDSecureRequest(
       amount: map['amount'],
       nonce: map['nonce'],
+      email: map['email'],
+      address: BraintreeThreeDSecurePostalAddress.fromMap(map['address']),
     );
   }
 
@@ -256,4 +366,9 @@ class BraintreeThreeDSecureRequest {
 
   factory BraintreeThreeDSecureRequest.fromJson(String source) =>
       BraintreeThreeDSecureRequest.fromMap(json.decode(source));
+
+  @override
+  String toString() {
+    return 'BraintreeThreeDSecureRequest(amount: $amount, nonce: $nonce, email: $email, address: $address)';
+  }
 }

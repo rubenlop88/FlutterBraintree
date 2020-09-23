@@ -111,7 +111,8 @@ class _MyAppState extends State<MyApp> {
                     cardNumber: '4111111111111111',
                     expirationMonth: '12',
                     expirationYear: '2021',
-                    cvv: '123');
+                    cvv: '123',
+                    shouldValidate: false);
 
                 BraintreePaymentMethodNonce tokenizeResult =
                     await Braintree.tokenizeCreditCard(
@@ -119,8 +120,15 @@ class _MyAppState extends State<MyApp> {
                   request,
                 );
 
+                final address = BraintreeThreeDSecurePostalAddress(
+                    givenName: 'Jill',
+                    surname: 'Doe',
+                    phoneNumber: '5551234567');
+
                 final threeDSRequest = BraintreeThreeDSecureRequest(
-                    amount: '12.12', nonce: tokenizeResult.nonce);
+                    nonce: tokenizeResult.nonce,
+                    amount: '12.12',
+                    email: 'test@email.com');
 
                 BraintreePaymentMethodNonce result =
                     await Braintree.requestThreeDSNonce(

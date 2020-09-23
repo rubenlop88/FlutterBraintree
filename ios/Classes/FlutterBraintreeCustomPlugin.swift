@@ -85,6 +85,7 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
                 return
             }
             
+            
             let threeDSecureRequest = BTThreeDSecureRequest()
             
             if let amount = requestInfo["amount"] as? String {
@@ -93,6 +94,30 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
             
             if let nonce = requestInfo["nonce"] as? String {
                 threeDSecureRequest.nonce = nonce
+            }
+            
+            if let email = requestInfo["email"] as? String {
+                threeDSecureRequest.email = email
+            }
+            
+            if let addressInfo = requestInfo["address"] as? [String: Any] {
+                let address = BTThreeDSecurePostalAddress()
+                address.givenName = addressInfo["givenName"] as? String// ASCII-printable characters required, else will throw a validation error
+                address.surname = addressInfo["surname"] as? String // ASCII-printable characters required, else will throw a validation error
+                address.phoneNumber = addressInfo["phoneNumber"] as? String
+                address.streetAddress = addressInfo["streetAddress"] as? String
+                address.extendedAddress = addressInfo["extendedAddress"] as? String
+                address.locality = addressInfo["locality"] as? String
+                address.region = addressInfo["region"] as? String
+                address.postalCode = addressInfo["postalCode"] as? String
+                address.countryCodeAlpha2 = addressInfo["countryCodeAlpha"] as? String
+                threeDSecureRequest.billingAddress = address
+
+                // Optional additional information.
+                // For best results, provide as many of these elements as possible.
+                let info = BTThreeDSecureAdditionalInformation()
+                info.shippingAddress = address
+                threeDSecureRequest.additionalInformation = info
             }
             
             threeDSecureRequest.versionRequested = .version2

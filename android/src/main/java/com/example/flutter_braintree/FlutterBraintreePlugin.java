@@ -12,6 +12,7 @@ import com.braintreepayments.api.exceptions.BraintreeError;
 import com.braintreepayments.api.exceptions.ErrorWithResponse;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -138,6 +139,11 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
             Map request = (Map) call.argument("request");
             intent.putExtra("amount", (String) request.get("amount"));
             intent.putExtra("nonce", (String) request.get("nonce"));
+            intent.putExtra("email", (String) request.get("email"));
+
+            HashMap<String, String> address = (HashMap<String, String>) request.get("address");
+            intent.putExtra("address", address);
+
             activity.startActivityForResult(intent, CUSTOM_ACTIVITY_REQUEST_CODE);
         } else {
             result.notImplemented();
