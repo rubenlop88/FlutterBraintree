@@ -48,6 +48,12 @@ open class BaseFlutterBraintreePlugin: NSObject {
         ];
     }
     
+    internal func buildCanMakePaymentsDict(canMakePayments: Bool) -> [String: Any?] {
+        [
+            "canMakePayments": canMakePayments,
+        ];
+    }
+    
     internal func returnAuthorizationMissingError (result: FlutterResult) {
         result(FlutterError(code: "braintree_error", message: "Authorization not specified (no clientToken or tokenizationKey)", details: nil))
     }

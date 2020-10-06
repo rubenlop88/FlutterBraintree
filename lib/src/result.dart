@@ -66,3 +66,16 @@ class BraintreeDeviceData {
 
   final String deviceData;
 }
+
+class BraintreeCanMakePaymentsResult {
+  const BraintreeCanMakePaymentsResult({@required this.canMakePayments});
+
+  factory BraintreeCanMakePaymentsResult.fromJson(dynamic source) {
+    if (source == null) return null;
+    return BraintreeCanMakePaymentsResult(
+      canMakePayments: source['canMakePayments'],
+    );
+  }
+
+  final bool canMakePayments;
+}

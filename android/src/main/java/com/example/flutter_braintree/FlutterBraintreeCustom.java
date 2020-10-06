@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.Card;
 import com.braintreepayments.api.DataCollector;
+import com.braintreepayments.api.GooglePayment;
 import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.ThreeDSecure;
 import com.braintreepayments.api.exceptions.InvalidArgumentException;
@@ -35,8 +36,9 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
         setContentView(R.layout.activity_flutter_braintree_custom);
         try {
             Intent intent = getIntent();
-            braintreeFragment = BraintreeFragment.newInstance(this, intent.getStringExtra("authorization"));
             String type = intent.getStringExtra("type");
+
+            braintreeFragment = BraintreeFragment.newInstance(this, intent.getStringExtra("authorization"));
             if (type.equals("tokenizeCreditCard")) {
                 tokenizeCreditCard();
             } else if (type.equals("requestPaypalNonce")) {
@@ -47,6 +49,8 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
                 requestDeviceData();
             } else if (type.equals("requestPayPalDeviceData")) {
                 requestPayPalDeviceData();
+            } else if (type.equals("canMakePaymentsWithGooglePay")) {
+                isReadyToPlayWithGooglePlay();
             } else {
                 throw new Exception("Invalid request type: " + type);
             }
@@ -57,6 +61,24 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
             finish();
             return;
         }
+    }
+
+    protected void isReadyToPlayWithGooglePlay() {
+        GooglePayment.isReadyToPay(braintreeFragment, new BraintreeResponseListener<Boolean>() {
+            @Override
+            public void onResponse(Boolean isReadyToPay) {
+                HashMap<String, Object> responseMap = new HashMap<String, Object>();
+                responseMap.put("canMakePayments", isReadyToPay);
+
+                Intent result = new Intent();
+                result.putExtra("type", "canMakePaymentsResponse");
+                result.putExtra("canMakePayments", responseMap);
+
+                setResult(RESULT_OK, result);
+                finish();
+
+            }
+        });
     }
 
     protected void requestDeviceData() {

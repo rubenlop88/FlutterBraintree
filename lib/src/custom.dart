@@ -84,4 +84,33 @@ class Braintree {
 
     return BraintreeDeviceData.fromJson(result);
   }
+
+  static Future<bool> canMakePaymentsWithApplePay() async {
+    final result = await _kChannel.invokeMethod('canMakePaymentsWithApplePay');
+
+    return BraintreeCanMakePaymentsResult.fromJson(result).canMakePayments;
+  }
+
+  static Future<BraintreePaymentMethodNonce> requestApplePayPayment(
+    String authorization,
+    BraintreeApplePayRequest request,
+  ) async {
+    assert(authorization != null);
+    assert(request != null);
+    final result = await _kChannel.invokeMethod('requestApplePayPayment', {
+      'authorization': authorization,
+      'request': request.toJson(),
+    });
+    return BraintreePaymentMethodNonce.fromJson(result);
+  }
+
+  static Future<bool> canMakePaymentsWithGooglePay(
+      {String authorization}) async {
+    final result =
+        await _kChannel.invokeMethod('canMakePaymentsWithGooglePay', {
+      'authorization': authorization,
+    });
+
+    return BraintreeCanMakePaymentsResult.fromJson(result).canMakePayments;
+  }
 }

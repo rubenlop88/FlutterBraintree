@@ -203,7 +203,7 @@ class BraintreeApplePayRequest {
         assert(appleMerchantID != null);
 
   /// The item's amount.
-  final double amount;
+  final String amount;
 
   /// Short description of the item.
   final String displayName;

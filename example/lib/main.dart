@@ -35,16 +35,16 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void showDeviceData(BraintreeDeviceData deviceData) {
+  void showText(String text) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('Payment deviceData:'),
+        title: Text('Info'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text('deviceData: ${deviceData.deviceData}'),
+            Text(text),
           ],
         ),
       ),
@@ -179,7 +179,7 @@ class _MyAppState extends State<MyApp> {
                 );
 
                 if (result != null) {
-                  showDeviceData(result);
+                  showText(result.deviceData);
                 }
               },
               child: Text('REQUEST DEVICE DATA'),
@@ -191,10 +191,46 @@ class _MyAppState extends State<MyApp> {
                 );
 
                 if (result != null) {
-                  showDeviceData(result);
+                  showText(result.deviceData);
                 }
               },
               child: Text('REQUEST PAYPAL DEVICE DATA'),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                final result = await Braintree.canMakePaymentsWithApplePay();
+
+                showText("Can use Apple Pay = $result");
+              },
+              child: Text('CAN MAKE PAYMENTS WITH APPLE PAY'),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                final request = BraintreeApplePayRequest(
+                    amount: '12.12',
+                    appleMerchantID: '',
+                    countryCode: '',
+                    displayName: '',
+                    currencyCode: 'USD');
+
+                BraintreePaymentMethodNonce result =
+                    await Braintree.requestApplePayPayment(
+                        tokenizationKey, request);
+
+                if (result != null) {
+                  showNonce(result);
+                }
+              },
+              child: Text('REQUEST APPLE PAY PAYMENT'),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                final result = await Braintree.canMakePaymentsWithGooglePay(
+                    authorization: tokenizationKey);
+
+                showText("Can use Google Pay = $result");
+              },
+              child: Text('CAN MAKE PAYMENTS WITH GOOGLE PAY'),
             ),
           ],
         ),
