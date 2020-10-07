@@ -113,4 +113,17 @@ class Braintree {
 
     return BraintreeCanMakePaymentsResult.fromJson(result).canMakePayments;
   }
+
+  static Future<BraintreePaymentMethodNonce> requestGooglePayPayment(
+    String authorization,
+    BraintreeGooglePaymentRequest request,
+  ) async {
+    assert(authorization != null);
+    assert(request != null);
+    final result = await _kChannel.invokeMethod('requestGooglePayPayment', {
+      'authorization': authorization,
+      'request': request.toJson(),
+    });
+    return BraintreePaymentMethodNonce.fromJson(result);
+  }
 }

@@ -153,7 +153,26 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
             intent.putExtra("authorization", (String) call.argument("authorization"));
 
             activity.startActivityForResult(intent, CUSTOM_ACTIVITY_REQUEST_CODE);
-        } else {
+        } else if (call.method.equals("requestGooglePayPayment")) {
+            String authorization = call.argument("authorization");
+            Intent intent = new Intent(activity, FlutterBraintreeCustom.class);
+
+            intent.putExtra("type", call.method);
+            intent.putExtra("authorization", (String) call.argument("authorization"));
+
+            assert (call.argument("request") instanceof Map);
+
+            Map request = (Map) call.argument("request");
+            intent.putExtra("totalPrice", (String) request.get("totalPrice"));
+            intent.putExtra("currencyCode", (String) request.get("currencyCode"));
+            intent.putExtra("billingAddressRequired", (Boolean) request.get("billingAddressRequired"));
+
+            if (request.get("googleMerchantID") != null) {
+                intent.putExtra("googleMerchantID", (String) request.get("googleMerchantID"));
+            }
+
+            activity.startActivityForResult(intent, CUSTOM_ACTIVITY_REQUEST_CODE);
+        }  else {
             result.notImplemented();
             activeResult = null;
         }

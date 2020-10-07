@@ -17,12 +17,15 @@ import com.braintreepayments.api.interfaces.BraintreeErrorListener;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.CardBuilder;
+import com.braintreepayments.api.models.GooglePaymentRequest;
 import com.braintreepayments.api.models.PayPalRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.models.ThreeDSecureAdditionalInformation;
 import com.braintreepayments.api.models.ThreeDSecureLookup;
 import com.braintreepayments.api.models.ThreeDSecurePostalAddress;
 import com.braintreepayments.api.models.ThreeDSecureRequest;
+import com.google.android.gms.wallet.TransactionInfo;
+import com.google.android.gms.wallet.WalletConstants;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -51,7 +54,9 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
                 requestPayPalDeviceData();
             } else if (type.equals("canMakePaymentsWithGooglePay")) {
                 isReadyToPlayWithGooglePlay();
-            } else {
+            } else if(type.equals("requestGooglePayPayment")) {
+                requestGooglePayPayment();
+            }  else {
                 throw new Exception("Invalid request type: " + type);
             }
         } catch (Exception e) {
@@ -61,6 +66,23 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
             finish();
             return;
         }
+    }
+    protected void requestGooglePayPayment() {
+        Intent intent = getIntent();
+
+        GooglePaymentRequest googlePaymentRequest = new GooglePaymentRequest()
+                .transactionInfo(TransactionInfo.newBuilder()
+                        .setTotalPrice(intent.getStringExtra("totalPrice"))
+                        .setCurrencyCode(intent.getStringExtra("currencyCode"))
+                        .setTotalPriceStatus(WalletConstants.TOTAL_PRICE_STATUS_FINAL)
+                        .build())
+                .billingAddressRequired(intent.getBooleanExtra("billingAddressRequired", false));
+
+        if (intent.getStringExtra("googleMerchantID") != null) {
+            googlePaymentRequest = googlePaymentRequest.googleMerchantId(intent.getStringExtra("googleMerchantID"));
+        }
+
+        GooglePayment.requestPayment(braintreeFragment, googlePaymentRequest);
     }
 
     protected void isReadyToPlayWithGooglePlay() {
