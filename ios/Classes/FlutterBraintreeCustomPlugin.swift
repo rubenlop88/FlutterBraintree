@@ -6,6 +6,7 @@ import BraintreeDropIn
 public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPlugin, BTViewControllerPresentingDelegate, BTThreeDSecureRequestDelegate {
     var applePayClient: BTApplePayClient?
     var applePayFlutterResult: FlutterResult? // solo para apple pay
+    var finishedApplePayWithResult: Bool = false
     
     static let supportedNetworks: [PKPaymentNetwork] = {
         var networks: [PKPaymentNetwork] = [.visa, .masterCard, .amex, .discover]
@@ -184,6 +185,7 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
         } else if call.method == CallMethod.requestApplePayPayment.rawValue {
             self.applePayClient = BTApplePayClient(apiClient: client!)
             self.applePayFlutterResult = result
+            self.finishedApplePayWithResult = false
             
             guard let requestInfo = dict(for: "request", in: call),
                     let amount = requestInfo["amount"] as? String,
@@ -257,6 +259,11 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
 extension FlutterBraintreeCustomPlugin: PKPaymentAuthorizationViewControllerDelegate {
     public func paymentAuthorizationViewControllerDidFinish(_ controller: PKPaymentAuthorizationViewController) {
         controller.dismiss(animated: true, completion: nil)
+        
+        if !finishedApplePayWithResult, let flutterResult = self.applePayFlutterResult {
+            handleResult(nonce: nil, error: nil, flutterResult: flutterResult)
+        }
+        
         isHandlingResult = false
     }
     
@@ -265,18 +272,23 @@ extension FlutterBraintreeCustomPlugin: PKPaymentAuthorizationViewControllerDele
                                             didAuthorizePayment payment: PKPayment,
                                             handler completion: @escaping (PKPaymentAuthorizationResult) -> Void) {
         guard let applePayClient = self.applePayClient,
-            let flutterResult = self.applePayFlutterResult else {
-                return
+              let flutterResult = self.applePayFlutterResult else {
+            finishedApplePayWithResult = true
+            completion(PKPaymentAuthorizationResult(status: .failure, errors: nil))
+            
+            return
         }
         
         applePayClient.tokenizeApplePay(payment) { (nonce, error) in
             if error != nil {
                 completion(PKPaymentAuthorizationResult(status: .failure, errors: nil))
+                self.finishedApplePayWithResult = true
                 self.handleResult(nonce: nil, error: error, flutterResult: flutterResult)
                 return
             }
             
             completion(PKPaymentAuthorizationResult(status: .success, errors: nil))
+            self.finishedApplePayWithResult = true
             self.handleResult(nonce: nonce, error: nil, flutterResult: flutterResult)
         }
     }
@@ -286,17 +298,21 @@ extension FlutterBraintreeCustomPlugin: PKPaymentAuthorizationViewControllerDele
                                             completion: @escaping (PKPaymentAuthorizationStatus) -> Void) {
         guard let applePayClient = self.applePayClient,
             let flutterResult = self.applePayFlutterResult else {
+                self.finishedApplePayWithResult = true
+                completion(PKPaymentAuthorizationStatus.failure)
                 return
         }
         
         applePayClient.tokenizeApplePay(payment) { (nonce, error) in
             if error != nil {
                 completion(PKPaymentAuthorizationStatus.failure)
+                self.finishedApplePayWithResult = true
                 self.handleResult(nonce: nil, error: error, flutterResult: flutterResult)
                 return
             }
             
             completion(PKPaymentAuthorizationStatus.success)
+            self.finishedApplePayWithResult = true
             self.handleResult(nonce: nonce, error: nil, flutterResult: flutterResult)
         }
     }
