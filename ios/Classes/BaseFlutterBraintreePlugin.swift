@@ -59,7 +59,9 @@ open class BaseFlutterBraintreePlugin: NSObject {
     }
     
     internal func returnBraintreeError(result: FlutterResult, error: Error) {
-        result(FlutterError(code: "braintree_error", message: error.localizedDescription, details: nil))
+        let nsError = error as NSError
+
+        result(FlutterError(code: "braintree_error", message: nsError.localizedDescription, details: nsError.localizedFailureReason))
     }
     
     internal func returnAlreadyOpenError(result: FlutterResult) {
