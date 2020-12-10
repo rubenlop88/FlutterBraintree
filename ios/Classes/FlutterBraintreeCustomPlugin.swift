@@ -8,15 +8,7 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
     var applePayFlutterResult: FlutterResult? // solo para apple pay
     var finishedApplePayWithResult: Bool = false
     
-    static let supportedNetworks: [PKPaymentNetwork] = {
-        var networks: [PKPaymentNetwork] = [.visa, .masterCard, .amex, .discover]
-        
-        if #available(iOS 10.1, *) {
-            networks.append(.JCB)
-        }
-        
-        return networks
-    }()
+    static let supportedNetworks: [PKPaymentNetwork] = [.visa, .masterCard, .amex, .discover]
     
     enum CallMethod: String {
         case requestPayPalDeviceData
@@ -53,7 +45,7 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
     private func handleUnauthorizedCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         if call.method == CallMethod.canMakePaymentsWithApplePay.rawValue {
             
-            let canMakePayments = PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: FlutterBraintreeCustomPlugin.supportedNetworks)
+            let canMakePayments = PKPaymentAuthorizationViewController.canMakePayments()
             handleCanMakePaymentsResult(canMakePayments: canMakePayments, error: nil, flutterResult: result)
             isHandlingResult = false
         } else {
