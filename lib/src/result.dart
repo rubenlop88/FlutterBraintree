@@ -73,7 +73,7 @@ class BraintreeCanMakePaymentsResult {
   factory BraintreeCanMakePaymentsResult.fromJson(dynamic source) {
     if (source == null) return null;
     return BraintreeCanMakePaymentsResult(
-      canMakePayments: source['canMakePayments'],
+      canMakePayments: source['canMakePayments'] ?? false,
     );
   }
 

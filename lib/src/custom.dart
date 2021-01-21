@@ -88,7 +88,7 @@ class Braintree {
   static Future<bool> canMakePaymentsWithApplePay() async {
     final result = await _kChannel.invokeMethod('canMakePaymentsWithApplePay');
 
-    return BraintreeCanMakePaymentsResult.fromJson(result).canMakePayments;
+    return BraintreeCanMakePaymentsResult.fromJson(result)?.canMakePayments;
   }
 
   static Future<BraintreePaymentMethodNonce> requestApplePayPayment(
@@ -111,7 +111,8 @@ class Braintree {
       'authorization': authorization,
     });
 
-    return BraintreeCanMakePaymentsResult.fromJson(result).canMakePayments;
+    return BraintreeCanMakePaymentsResult.fromJson(result)?.canMakePayments ??
+        false;
   }
 
   static Future<BraintreePaymentMethodNonce> requestGooglePayPayment(
