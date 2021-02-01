@@ -45,7 +45,7 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
     private func handleUnauthorizedCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         if call.method == CallMethod.canMakePaymentsWithApplePay.rawValue {
             
-            let canMakePayments = PKPaymentAuthorizationViewController.canMakePayments()
+            let canMakePayments = PKPaymentAuthorizationViewController.canMakePayments(usingNetworks: FlutterBraintreeCustomPlugin.supportedNetworks)
             handleCanMakePaymentsResult(canMakePayments: canMakePayments, error: nil, flutterResult: result)
             isHandlingResult = false
         } else {
