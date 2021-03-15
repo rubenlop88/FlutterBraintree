@@ -95,7 +95,7 @@ public class FlutterBraintreeDropIn implements FlutterPlugin, ActivityAware, Met
       if (!((Boolean) call.argument("venmoEnabled")))
         dropInRequest.disableVenmo();
       if (!((Boolean) call.argument("cardEnabled")))
-        dropInRequest.disableCard();
+        //dropInRequest.disableCard();
 
       if (activeResult != null) {
         result.error("drop_in_already_running", "Cannot launch another Drop-in activity while one is already running.", null);
