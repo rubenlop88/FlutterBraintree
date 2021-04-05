@@ -1,20 +1,13 @@
 package com.example.flutter_braintree;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.braintreepayments.api.dropin.DropInActivity;
-import com.braintreepayments.api.dropin.DropInRequest;
-import com.braintreepayments.api.dropin.DropInResult;
 import com.braintreepayments.api.exceptions.BraintreeError;
 import com.braintreepayments.api.exceptions.ErrorWithResponse;
-import com.braintreepayments.api.models.PaymentMethodNonce;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +19,8 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener;
+import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, MethodCallHandler, ActivityResultListener {
     private static final int CUSTOM_ACTIVITY_REQUEST_CODE = 0x420;
@@ -206,13 +199,13 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
                     Exception error = (Exception) data.getSerializableExtra("error");
                     String message = error.getMessage();
                     String details = "";
-
                     try {
                         ErrorWithResponse errorWithResponse = (ErrorWithResponse) error;
                         List<String> nestedMessages = nestedMessages(errorWithResponse.getFieldErrors());
-
                         message = errorWithResponse.getLocalizedMessage();
-                        details = TextUtils.join(", ", nestedMessages);
+                        if (nestedMessages != null) {
+                          details = TextUtils.join(", ", nestedMessages);
+                        }
                     } catch (ClassCastException ignored) {}
 
                     activeResult.error("error", message, details);
@@ -225,24 +218,19 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
     }
 
     List<String> nestedMessages(List<BraintreeError> errors) {
-        if(errors == null || errors.isEmpty()) {
+        if (errors == null || errors.isEmpty()) {
             return null;
         }
-
         List<String> currentMessages = new ArrayList<>();
-
-        for(BraintreeError error: errors) {
-            if(error.getMessage() != null) {
+        for (BraintreeError error: errors) {
+            if (error.getMessage() != null) {
                 currentMessages.add(error.getMessage());
             }
-
             List<String> nestedResult = nestedMessages(error.getFieldErrors());
-
-            if(nestedResult != null) {
+            if (nestedResult != null) {
                 currentMessages.addAll(nestedResult);
             }
         }
-
         return currentMessages;
     }
 }

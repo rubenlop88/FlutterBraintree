@@ -1,9 +1,9 @@
 package com.example.flutter_braintree;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.braintreepayments.api.BraintreeFragment;
 import com.braintreepayments.api.Card;
@@ -11,7 +11,6 @@ import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.GooglePayment;
 import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.ThreeDSecure;
-import com.braintreepayments.api.exceptions.InvalidArgumentException;
 import com.braintreepayments.api.interfaces.BraintreeCancelListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
@@ -21,13 +20,11 @@ import com.braintreepayments.api.models.GooglePaymentRequest;
 import com.braintreepayments.api.models.PayPalRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 import com.braintreepayments.api.models.ThreeDSecureAdditionalInformation;
-import com.braintreepayments.api.models.ThreeDSecureLookup;
 import com.braintreepayments.api.models.ThreeDSecurePostalAddress;
 import com.braintreepayments.api.models.ThreeDSecureRequest;
 import com.google.android.gms.wallet.TransactionInfo;
 import com.google.android.gms.wallet.WalletConstants;
 
-import java.io.Serializable;
 import java.util.HashMap;
 
 public class FlutterBraintreeCustom extends AppCompatActivity implements PaymentMethodNonceCreatedListener, BraintreeCancelListener, BraintreeErrorListener, BraintreeResponseListener<String> {
@@ -64,9 +61,9 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
             result.putExtra("error", e);
             setResult(2, result);
             finish();
-            return;
         }
     }
+
     protected void requestGooglePayPayment() {
         Intent intent = getIntent();
 
