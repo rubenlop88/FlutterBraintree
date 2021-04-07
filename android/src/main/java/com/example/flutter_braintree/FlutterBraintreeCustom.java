@@ -1,5 +1,7 @@
 package com.example.flutter_braintree;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -27,7 +29,7 @@ import com.google.android.gms.wallet.WalletConstants;
 
 import java.util.HashMap;
 
-public class FlutterBraintreeCustom extends AppCompatActivity implements PaymentMethodNonceCreatedListener, BraintreeCancelListener, BraintreeErrorListener, BraintreeResponseListener<String> {
+public class FlutterBraintreeCustom extends AppCompatActivity implements PaymentMethodNonceCreatedListener, BraintreeCancelListener, BraintreeErrorListener {
     private BraintreeFragment braintreeFragment;
 
     @Override
@@ -36,6 +38,7 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
         setContentView(R.layout.activity_flutter_braintree_custom);
         try {
             Intent intent = getIntent();
+            braintreeFragment = BraintreeFragment.newInstance(this, intent.getStringExtra("authorization"));
             String type = intent.getStringExtra("type");
 
             braintreeFragment = BraintreeFragment.newInstance(this, intent.getStringExtra("authorization"));

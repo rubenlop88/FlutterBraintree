@@ -1,3 +1,19 @@
+## 2.0.0-nullsafety.0
+
+* Add null-safety support
+
+## 1.2.1
+
+* Fix Android build (hopefully)
+
+## 1.2.0
+
+* Add option for CreditCard CVV number (thank you to [ilicmilan](https://github.com/ilicmilan)!)
+
+## 1.1.0+1
+
+* Fix vulnerability in Braintree plugin (Play Store issue)
+
 ## 1.1.0
 
 * Add ApplePay support for the drop-in UI (thank you again to HareshGediya!)
