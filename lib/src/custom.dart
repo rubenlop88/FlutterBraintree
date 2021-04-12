@@ -46,83 +46,75 @@ class Braintree {
     return BraintreePaymentMethodNonce.fromJson(result);
   }
 
-  static Future<BraintreePaymentMethodNonce> requestThreeDSNonce(
+  static Future<BraintreePaymentMethodNonce?> requestThreeDSNonce(
     String authorization,
     BraintreeThreeDSecureRequest request,
   ) async {
-    assert(authorization != null);
-    assert(request != null);
     final result = await _kChannel.invokeMethod('threeDSecure', {
       'authorization': authorization,
       'request': request.toMap(),
     });
+    if (result == null) return null;
     return BraintreePaymentMethodNonce.fromJson(result);
   }
 
-  static Future<BraintreeDeviceData> requestDeviceData(
+  static Future<BraintreeDeviceData?> requestDeviceData(
     String authorization,
   ) async {
-    assert(authorization != null);
-
     final result = await _kChannel.invokeMethod('requestDeviceData', {
       'authorization': authorization,
     });
-
+    if (result == null) return null;
     return BraintreeDeviceData.fromJson(result);
   }
 
-  static Future<BraintreeDeviceData> requestPaypalDeviceData(
+  static Future<BraintreeDeviceData?> requestPaypalDeviceData(
     String authorization,
   ) async {
-    assert(authorization != null);
-
     final result = await _kChannel.invokeMethod('requestPayPalDeviceData', {
       'authorization': authorization,
     });
-
+    if (result == null) return null;
     return BraintreeDeviceData.fromJson(result);
   }
 
   static Future<bool> canMakePaymentsWithApplePay() async {
     final result = await _kChannel.invokeMethod('canMakePaymentsWithApplePay');
-
-    return BraintreeCanMakePaymentsResult.fromJson(result)?.canMakePayments;
+    if (result == null) return false;
+    return BraintreeCanMakePaymentsResult.fromJson(result).canMakePayments;
   }
 
-  static Future<BraintreePaymentMethodNonce> requestApplePayPayment(
+  static Future<BraintreePaymentMethodNonce?> requestApplePayPayment(
     String authorization,
     BraintreeApplePayRequest request,
   ) async {
-    assert(authorization != null);
-    assert(request != null);
     final result = await _kChannel.invokeMethod('requestApplePayPayment', {
       'authorization': authorization,
       'request': request.toJson(),
     });
+    if (result == null) return null;
     return BraintreePaymentMethodNonce.fromJson(result);
   }
 
   static Future<bool> canMakePaymentsWithGooglePay(
-      {String authorization}) async {
+      {required String authorization}) async {
     final result =
         await _kChannel.invokeMethod('canMakePaymentsWithGooglePay', {
       'authorization': authorization,
     });
-
-    return BraintreeCanMakePaymentsResult.fromJson(result)?.canMakePayments ??
-        false;
+    if (result == null) return false;
+    return BraintreeCanMakePaymentsResult.fromJson(result).canMakePayments;
   }
 
-  static Future<BraintreePaymentMethodNonce> requestGooglePayPayment(
+  static Future<BraintreePaymentMethodNonce?> requestGooglePayPayment(
     String authorization,
     BraintreeGooglePaymentRequest request,
   ) async {
-    assert(authorization != null);
-    assert(request != null);
     final result = await _kChannel.invokeMethod('requestGooglePayPayment', {
       'authorization': authorization,
       'request': request.toJson(),
     });
+    if (result == null) return null;
     return BraintreePaymentMethodNonce.fromJson(result);
   }
 }

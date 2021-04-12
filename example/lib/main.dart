@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> {
                       cardEnabled: true,
                       amount: '12.13',
                       requestThreeDSecureVerification: true);
-                  BraintreeDropInResult result =
+                  BraintreeDropInResult? result =
                       await BraintreeDropIn.start(request);
                   if (result != null) {
                     showNonce(result.paymentMethodNonce);
@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
                       expirationYear: '2021',
                       cvv: '123',
                       shouldValidate: true);
-                  BraintreePaymentMethodNonce result =
+                  BraintreePaymentMethodNonce? result =
                       await Braintree.tokenizeCreditCard(
                     tokenizationKey,
                     request,
@@ -109,13 +109,14 @@ class _MyAppState extends State<MyApp> {
               ElevatedButton(
                 onPressed: () async {
                   final request = BraintreeCreditCardRequest(
-                      cardNumber: '4111111111111111',
-                      expirationMonth: '12',
-                      expirationYear: '2021',
-                      cvv: '123',
-                      shouldValidate: false);
+                    cardNumber: '4111111111111111',
+                    expirationMonth: '12',
+                    expirationYear: '2021',
+                    cvv: '123',
+                    shouldValidate: false,
+                  );
 
-                  BraintreePaymentMethodNonce tokenizeResult =
+                  BraintreePaymentMethodNonce? tokenizeResult =
                       await Braintree.tokenizeCreditCard(
                     tokenizationKey,
                     request,
@@ -125,15 +126,20 @@ class _MyAppState extends State<MyApp> {
                       givenName: 'Jill',
                       surname: 'Doe',
                       phoneNumber: '5551234567');
-
+                  if (tokenizeResult == null) {
+                    return;
+                  }
                   final threeDSRequest = BraintreeThreeDSecureRequest(
-                      nonce: tokenizeResult.nonce,
-                      amount: '12.12',
-                      email: 'test@email.com');
+                    nonce: tokenizeResult.nonce,
+                    amount: '12.12',
+                    email: 'test@email.com',
+                  );
 
-                  BraintreePaymentMethodNonce result =
+                  BraintreePaymentMethodNonce? result =
                       await Braintree.requestThreeDSNonce(
-                          tokenizationKey, threeDSRequest);
+                    tokenizationKey,
+                    threeDSRequest,
+                  );
 
                   if (result != null) {
                     showNonce(result);
@@ -148,7 +154,7 @@ class _MyAppState extends State<MyApp> {
                         'I hereby agree that flutter_braintree is great.',
                     displayName: 'Your Company',
                   );
-                  BraintreePaymentMethodNonce result =
+                  BraintreePaymentMethodNonce? result =
                       await Braintree.requestPaypalNonce(
                     tokenizationKey,
                     request,
@@ -162,7 +168,7 @@ class _MyAppState extends State<MyApp> {
               ElevatedButton(
                 onPressed: () async {
                   final request = BraintreePayPalRequest(amount: '13.37');
-                  BraintreePaymentMethodNonce result =
+                  BraintreePaymentMethodNonce? result =
                       await Braintree.requestPaypalNonce(
                     tokenizationKey,
                     request,
@@ -179,8 +185,8 @@ class _MyAppState extends State<MyApp> {
                     tokenizationKey,
                   );
 
-                  if (result != null) {
-                    showText(result.deviceData);
+                  if (result?.deviceData != null) {
+                    showText(result!.deviceData!);
                   }
                 },
                 child: Text('REQUEST DEVICE DATA'),
@@ -191,8 +197,8 @@ class _MyAppState extends State<MyApp> {
                     tokenizationKey,
                   );
 
-                  if (result != null) {
-                    showText(result.deviceData);
+                  if (result?.deviceData != null) {
+                    showText(result!.deviceData!);
                   }
                 },
                 child: Text('REQUEST PAYPAL DEVICE DATA'),
@@ -214,7 +220,7 @@ class _MyAppState extends State<MyApp> {
                       displayName: '',
                       currencyCode: 'USD');
 
-                  BraintreePaymentMethodNonce result =
+                  BraintreePaymentMethodNonce? result =
                       await Braintree.requestApplePayPayment(
                           tokenizationKey, request);
 
@@ -241,7 +247,7 @@ class _MyAppState extends State<MyApp> {
                       googleMerchantID: null,
                       totalPrice: '12.12');
 
-                  BraintreePaymentMethodNonce result =
+                  BraintreePaymentMethodNonce? result =
                       await Braintree.requestGooglePayPayment(
                           tokenizationKey, request);
 

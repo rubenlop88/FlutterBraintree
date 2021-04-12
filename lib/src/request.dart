@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class BraintreeDropInRequest {
   BraintreeDropInRequest({
     this.clientToken,
@@ -104,19 +106,20 @@ class BraintreeCreditCardRequest {
   bool shouldValidate;
 
   Map<String, dynamic> toJson() => {
-        if (cardNumber != null) 'cardNumber': cardNumber,
-        if (expirationMonth != null) 'expirationMonth': expirationMonth,
-        if (expirationYear != null) 'expirationYear': expirationYear,
-        if (cvv != null) 'cvv': cvv,
-        if (shouldValidate != null) 'shouldValidate': shouldValidate,
+        'cardNumber': cardNumber,
+        'expirationMonth': expirationMonth,
+        'expirationYear': expirationYear,
+        'cvv': cvv,
+        'shouldValidate': shouldValidate,
       };
 
-  BraintreeCreditCardRequest copyWith(
-      {String cardNumber,
-      String expirationMonth,
-      String expirationYear,
-      String cvv,
-      bool shouldValidate}) {
+  BraintreeCreditCardRequest copyWith({
+    String? cardNumber,
+    String? expirationMonth,
+    String? expirationYear,
+    String? cvv,
+    bool? shouldValidate,
+  }) {
     return BraintreeCreditCardRequest(
         cardNumber: cardNumber ?? this.cardNumber,
         expirationMonth: expirationMonth ?? this.expirationMonth,
@@ -221,15 +224,15 @@ class BraintreeApplePayRequest {
 }
 
 class BraintreeThreeDSecurePostalAddress {
-  final String givenName;
-  final String surname;
-  final String phoneNumber;
-  final String streetAddress;
-  final String extendedAddress;
-  final String locality;
-  final String region;
-  final String postalCode;
-  final String countryCodeAlpha;
+  final String? givenName;
+  final String? surname;
+  final String? phoneNumber;
+  final String? streetAddress;
+  final String? extendedAddress;
+  final String? locality;
+  final String? region;
+  final String? postalCode;
+  final String? countryCodeAlpha;
 
   BraintreeThreeDSecurePostalAddress({
     this.givenName,
@@ -244,15 +247,15 @@ class BraintreeThreeDSecurePostalAddress {
   });
 
   BraintreeThreeDSecurePostalAddress copyWith({
-    String givenName,
-    String surname,
-    String phoneNumber,
-    String streetAddress,
-    String extendedAddress,
-    String locality,
-    String region,
-    String postalCode,
-    String countryCodeAlpha,
+    String? givenName,
+    String? surname,
+    String? phoneNumber,
+    String? streetAddress,
+    String? extendedAddress,
+    String? locality,
+    String? region,
+    String? postalCode,
+    String? countryCodeAlpha,
   }) {
     return BraintreeThreeDSecurePostalAddress(
       givenName: givenName ?? this.givenName,
@@ -281,19 +284,18 @@ class BraintreeThreeDSecurePostalAddress {
     };
   }
 
-  factory BraintreeThreeDSecurePostalAddress.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-
+  factory BraintreeThreeDSecurePostalAddress.fromMap(
+      Map<String, dynamic>? map) {
     return BraintreeThreeDSecurePostalAddress(
-      givenName: map['givenName'],
-      surname: map['surname'],
-      phoneNumber: map['phoneNumber'],
-      streetAddress: map['streetAddress'],
-      extendedAddress: map['extendedAddress'],
-      locality: map['locality'],
-      region: map['region'],
-      postalCode: map['postalCode'],
-      countryCodeAlpha: map['countryCodeAlpha'],
+      givenName: map?['givenName'],
+      surname: map?['surname'],
+      phoneNumber: map?['phoneNumber'],
+      streetAddress: map?['streetAddress'],
+      extendedAddress: map?['extendedAddress'],
+      locality: map?['locality'],
+      region: map?['region'],
+      postalCode: map?['postalCode'],
+      countryCodeAlpha: map?['countryCodeAlpha'],
     );
   }
 
@@ -312,20 +314,20 @@ class BraintreeThreeDSecureRequest {
   final String amount;
   final String nonce;
   final String email;
-  final BraintreeThreeDSecurePostalAddress address;
+  final BraintreeThreeDSecurePostalAddress? address;
 
   BraintreeThreeDSecureRequest({
-    this.amount,
-    this.nonce,
-    this.email,
+    required this.amount,
+    required this.nonce,
+    required this.email,
     this.address,
   });
 
   BraintreeThreeDSecureRequest copyWith({
-    String amount,
-    String nonce,
-    String email,
-    BraintreeThreeDSecurePostalAddress address,
+    String? amount,
+    String? nonce,
+    String? email,
+    BraintreeThreeDSecurePostalAddress? address,
   }) {
     return BraintreeThreeDSecureRequest(
       amount: amount ?? this.amount,
@@ -344,14 +346,12 @@ class BraintreeThreeDSecureRequest {
     };
   }
 
-  factory BraintreeThreeDSecureRequest.fromMap(Map<String, dynamic> map) {
-    if (map == null) return null;
-
+  factory BraintreeThreeDSecureRequest.fromMap(Map<String, dynamic>? map) {
     return BraintreeThreeDSecureRequest(
-      amount: map['amount'],
-      nonce: map['nonce'],
-      email: map['email'],
-      address: BraintreeThreeDSecurePostalAddress.fromMap(map['address']),
+      amount: map?['amount'],
+      nonce: map?['nonce'],
+      email: map?['email'],
+      address: BraintreeThreeDSecurePostalAddress.fromMap(map?['address']),
     );
   }
 

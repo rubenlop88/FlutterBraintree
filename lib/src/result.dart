@@ -51,23 +51,21 @@ class BraintreePaymentMethodNonce {
 }
 
 class BraintreeDeviceData {
-  const BraintreeDeviceData({@required this.deviceData});
+  const BraintreeDeviceData({required this.deviceData});
 
   factory BraintreeDeviceData.fromJson(dynamic source) {
-    if (source == null) return null;
     return BraintreeDeviceData(
       deviceData: source['deviceData'],
     );
   }
 
-  final String deviceData;
+  final String? deviceData;
 }
 
 class BraintreeCanMakePaymentsResult {
-  const BraintreeCanMakePaymentsResult({@required this.canMakePayments});
+  const BraintreeCanMakePaymentsResult({required this.canMakePayments});
 
   factory BraintreeCanMakePaymentsResult.fromJson(dynamic source) {
-    if (source == null) return null;
     return BraintreeCanMakePaymentsResult(
       canMakePayments: source['canMakePayments'] ?? false,
     );
