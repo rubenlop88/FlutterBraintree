@@ -1,19 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
+import 'package:flutter_braintree_platform_interface/flutter_braintree_platform_interface.dart';
+import 'package:flutter_braintree_platform_interface/types/request.dart';
+import 'package:flutter_braintree_platform_interface/types/result.dart';
 
 class BraintreeDropIn {
-  static const MethodChannel _kChannel =
-      const MethodChannel('flutter_braintree.drop_in');
-
   const BraintreeDropIn._();
 
-  static Future<BraintreeDropInResult?> start(
-      BraintreeDropInRequest request) async {
-    var result = await _kChannel.invokeMethod(
-      'start',
-      request.toJson(),
-    );
-    return BraintreeDropInResult.fromJson(result);
-  }
+  static Future<BraintreeDropInResult?> start(BraintreeDropInRequest request) =>
+      FlutterBraintreePlatform.instance.start(request);
 }

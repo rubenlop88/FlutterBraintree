@@ -26,8 +26,8 @@ class BraintreePaymentMethodNonce {
   const BraintreePaymentMethodNonce({
     required this.nonce,
     required this.typeLabel,
-    required this.description,
-    required this.isDefault,
+    this.description,
+    this.isDefault,
   });
 
   static BraintreePaymentMethodNonce? fromJson(dynamic source) {

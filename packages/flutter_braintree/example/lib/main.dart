@@ -187,7 +187,7 @@ class _MyAppState extends State<MyApp> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  final result = await Braintree.requestPaypalDeviceData(
+                  final result = await Braintree.requestPayPalDeviceData(
                     tokenizationKey,
                   );
 
@@ -227,7 +227,7 @@ class _MyAppState extends State<MyApp> {
               ElevatedButton(
                 onPressed: () async {
                   final result = await Braintree.canMakePaymentsWithGooglePay(
-                      authorization: tokenizationKey);
+                      tokenizationKey);
 
                   showText("Can use Google Pay = $result");
                 },

@@ -56,7 +56,4 @@ class Braintree {
   ) =>
       FlutterBraintreePlatform.instance
           .requestGooglePayPayment(authorization, request);
-
-  static Future<BraintreeDropInResult?> start(BraintreeDropInRequest request) =>
-      FlutterBraintreePlatform.instance.start(request);
 }
