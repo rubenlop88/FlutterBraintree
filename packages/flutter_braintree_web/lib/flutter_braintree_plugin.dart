@@ -56,15 +56,21 @@ class FlutterBraintreePlugin extends FlutterBraintreePlatform {
       ),
     );
 
-    final paypal = await promiseToFuture<paypal_package.Paypal>(
+    final paypal_package.Paypal paypal =
+        await promiseToFuture<paypal_package.Paypal>(
       paypal_package.create(paypal_package.Options(client: clientInstance)),
     );
+
     final tokenizePayload =
-        await promiseToFuture<paypal_package.TokenizePayload>(paypal.tokenize(
-      flow: 'vault',
-      displayName: request.displayName,
-      billingAgreementDescription: request.billingAgreementDescription,
-    ));
+        await promiseToFuture<paypal_package.TokenizePayload>(
+      paypal.tokenize(
+        paypal_package.TokenizeOptions(
+          flow: 'vault',
+          displayName: request.displayName,
+          billingAgreementDescription: request.billingAgreementDescription,
+        ),
+      ),
+    );
 
     return BraintreePaymentMethodNonce(
         nonce: tokenizePayload.nonce, typeLabel: tokenizePayload.type);

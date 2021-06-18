@@ -18,18 +18,26 @@ class TokenizePayload {
 
 @JS()
 @anonymous
-class Paypal {
-  external TokenizePayload Function({
+class TokenizeOptions {
+  external String flow;
+  external String? displayName;
+  external String? billingAgreementDescription;
+
+  external factory TokenizeOptions({
     String flow,
     String? displayName,
     String? billingAgreementDescription,
-  }) get tokenize;
-
-  external factory Paypal({
-    String flow,
-    String displayName,
-    String billingAgreementDescription,
   });
+}
+
+@JS()
+@anonymous
+class Paypal {
+  external TokenizePayload Function(
+    TokenizeOptions tokenizeOptions,
+  ) get tokenize;
+
+  external factory Paypal({TokenizeOptions tokenizeOptions});
 }
 
 @JS('braintree.paypal.create')
