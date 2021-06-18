@@ -23,9 +23,11 @@ packages:
   flutter_braintree_platform_interface:
     dependency: "direct main"
     description:
-      path: "../flutter_braintree_platform_interface"
-      relative: true
-    source: path
+      path: "packages/flutter_braintree_platform_interface"
+      ref: "feature/federated-plugin-migration"
+      resolved-ref: "30a0624762659f1a05a2508e05d2f5b6f65e7b7f"
+      url: "https://github.com/Techrrific-Inc/FlutterBraintree.git"
+    source: git
     version: "1.0.0"
   flutter_web_plugins:
     dependency: "direct main"
