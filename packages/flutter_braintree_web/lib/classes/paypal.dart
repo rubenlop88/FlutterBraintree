@@ -33,7 +33,7 @@ class Paypal {
 }
 
 @JS('braintree.paypal.create')
-external dynamic create(Options options);
+external Paypal create(Options options);
 
 @JS()
 @anonymous
