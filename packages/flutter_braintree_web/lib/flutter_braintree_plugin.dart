@@ -17,6 +17,8 @@ class FlutterBraintreePlugin extends FlutterBraintreePlatform {
     FlutterBraintreePlatform.instance = FlutterBraintreePlugin();
   }
 
+  static FlutterBraintreePlatform get instance => instance;
+
   @override
   Future<BraintreeDeviceData?> requestPayPalDeviceData(
     String authorization,
