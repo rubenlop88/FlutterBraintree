@@ -8,6 +8,8 @@ import 'package:flutter_braintree_web/classes/client.dart' as client_package;
 import 'package:flutter_braintree_web/classes/data_collector.dart'
     as data_collector_package;
 import 'package:flutter_braintree_web/classes/paypal.dart' as paypal_package;
+import 'package:flutter_braintree_web/classes/three_d_secure.dart'
+    as three_d_secure_package;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
@@ -17,10 +19,8 @@ class FlutterBraintreePlugin extends FlutterBraintreePlatform {
     FlutterBraintreePlatform.instance = FlutterBraintreePlugin();
   }
 
-  static FlutterBraintreePlatform get instance => instance;
-
   @override
-  Future<BraintreeDeviceData?> requestPayPalDeviceData(
+  Future<BraintreeDeviceData?> requestDeviceData(
     String authorization,
   ) async {
     final client_package.Client clientInstance =
@@ -76,5 +76,94 @@ class FlutterBraintreePlugin extends FlutterBraintreePlatform {
 
     return BraintreePaymentMethodNonce(
         nonce: tokenizePayload.nonce, typeLabel: tokenizePayload.type);
+  }
+
+  @override
+  Future<BraintreePaymentMethodNonce?> tokenizeCreditCard(
+    String authorization,
+    BraintreeCreditCardRequest request,
+  ) async {
+    final client_package.Client clientInstance =
+        await promiseToFuture<client_package.Client>(
+      client_package.create(
+        client_package.Options(authorization: authorization),
+      ),
+    );
+
+    final requestPayload = await promiseToFuture<client_package.RequestPayload>(
+      clientInstance.request(
+        client_package.RequestOptions(
+          data: client_package.RequestData(
+            creditCard: client_package.CreditCard(
+                cvv: request.cvv!,
+                number: request.cardNumber!,
+                expirationDate:
+                    '${request.expirationMonth}/${request.expirationYear}'),
+          ),
+          method: 'post',
+          endpoint: 'payment_methods/credit_cards',
+        ),
+      ),
+    );
+
+    if (requestPayload.creditCards.isNotEmpty) {
+      return BraintreePaymentMethodNonce(
+          nonce: requestPayload.creditCards.first.nonce,
+          typeLabel: requestPayload.creditCards.first.type);
+    }
+  }
+
+  @override
+  Future<BraintreePaymentMethodNonce?> requestThreeDSNonce(
+    String authorization,
+    BraintreeThreeDSecureRequest request,
+  ) async {
+    final client_package.Client clientInstance =
+        await promiseToFuture<client_package.Client>(
+      client_package.create(
+        client_package.Options(authorization: authorization),
+      ),
+    );
+
+    final threeDSecure =
+        await promiseToFuture<three_d_secure_package.ThreeDSecure>(
+      three_d_secure_package.create(
+        three_d_secure_package.Options(
+          client: clientInstance,
+          version: '2',
+        ),
+      ),
+    );
+
+    threeDSecure.on(
+      'lookup-complete',
+      allowInterop((
+          [three_d_secure_package.DataPayload? dataPayload, Function? next]) {
+        next!();
+      }),
+    );
+
+    final challengeResponse =
+        await promiseToFuture<three_d_secure_package.ChallengeResponse>(
+      threeDSecure.verifyCard(
+        three_d_secure_package.VerifyCardPayload(
+          email: request.email!,
+          amount: request.amount!,
+          nonce: request.nonce!,
+          billingAddress: three_d_secure_package.BillingAddress(
+            phoneNumber: request.address!.phoneNumber!,
+          ),
+        ),
+      ),
+    );
+
+    final challengeCancelCode = challengeResponse
+        .rawCardinalSDKVerificationData?.Payment?.ExtendedData?.ChallengeCancel;
+    if (challengeResponse.nonce.isNotEmpty && challengeCancelCode == null) {
+      return BraintreePaymentMethodNonce(
+          nonce: challengeResponse.nonce, typeLabel: challengeResponse.type);
+    } else {
+      return null;
+    }
   }
 }

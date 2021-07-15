@@ -37,7 +37,7 @@ class Paypal {
     TokenizeOptions tokenizeOptions,
   ) get tokenize;
 
-  external factory Paypal({TokenizeOptions tokenizeOptions});
+  external factory Paypal({Function tokenize});
 }
 
 @JS('braintree.paypal.create')

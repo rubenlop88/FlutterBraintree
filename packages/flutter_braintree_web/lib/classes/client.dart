@@ -7,8 +7,85 @@ import 'package:js/js.dart';
 @anonymous
 class Client {
   external Configuration Function() get getConfiguration;
+  external RequestPayload Function(RequestOptions requestOptions) get request;
 
-  external factory Client({Function getConfiguration});
+  external factory Client({Function getConfiguration, Function request});
+}
+
+@JS()
+@anonymous
+class RequestPayload {
+  external List<TokenizedCreditCard> creditCards;
+
+  external factory RequestPayload({List<TokenizedCreditCard> creditCards});
+}
+
+@JS()
+@anonymous
+class RequestOptions {
+  external RequestData data;
+  external String endpoint;
+  external String method;
+
+  external factory RequestOptions({
+    RequestData data,
+    String endpoint,
+    String method,
+  });
+}
+
+@JS()
+@anonymous
+class RequestData {
+  external CreditCard creditCard;
+
+  external factory RequestData({CreditCard creditCard});
+}
+
+@JS()
+@anonymous
+class TokenizedCreditCard {
+  external String nonce;
+  external String type;
+
+  external factory TokenizedCreditCard({
+    String nonce,
+    String type,
+  });
+}
+
+@JS()
+@anonymous
+class CreditCard {
+  external String number;
+  external String cvv;
+  external String expirationDate;
+  external CreditCardOptions? options;
+  external CreditBillingAddress? billingAddress;
+
+  external factory CreditCard({
+    String number,
+    String cvv,
+    String expirationDate,
+    CreditCardOptions? options,
+    CreditBillingAddress? billingAddress,
+  });
+}
+
+@JS()
+@anonymous
+class CreditCardOptions {
+  external bool validate;
+
+  external factory CreditCardOptions({bool validate});
+}
+
+@JS()
+@anonymous
+class CreditBillingAddress {
+  external String? postalCode;
+
+  external factory CreditBillingAddress({String? postalCode});
 }
 
 @JS()
