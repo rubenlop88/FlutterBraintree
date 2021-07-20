@@ -114,7 +114,8 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
         ThreeDSecureRequest threeDSecureRequest = new ThreeDSecureRequest()
                 .amount(intent.getStringExtra("amount"))
                 .email(intent.getStringExtra("email"))
-                .nonce(intent.getStringExtra("nonce"));
+                .nonce(intent.getStringExtra("nonce"))
+                .versionRequested(ThreeDSecureRequest.VERSION_2);
 
         HashMap<String, String> addressInfo = (HashMap<String, String>) intent.getSerializableExtra("address");
 
@@ -181,7 +182,7 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
         nonceMap.put("typeLabel", paymentMethodNonce.getTypeLabel());
         nonceMap.put("description", paymentMethodNonce.getDescription());
         nonceMap.put("isDefault", paymentMethodNonce.isDefault());
-
+        
         Intent result = new Intent();
         result.putExtra("type", "paymentMethodNonce");
         result.putExtra("paymentMethodNonce", nonceMap);
