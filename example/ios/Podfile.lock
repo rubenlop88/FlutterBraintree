@@ -24,6 +24,9 @@ PODS:
   - Braintree/UnionPay (4.37.1):
     - Braintree/Card
     - Braintree/Core
+  - Braintree/Venmo (4.37.1):
+    - Braintree/Core
+    - Braintree/PayPalDataCollector
   - BraintreeDropIn (8.1.4):
     - BraintreeDropIn/DropIn (= 8.1.4)
   - BraintreeDropIn/DropIn (8.1.4):
@@ -40,6 +43,7 @@ PODS:
     - Braintree/DataCollector (~> 4.37.0)
     - Braintree/PaymentFlow (~> 4.37.0)
     - Braintree/PayPal (~> 4.37.0)
+    - Braintree/Venmo (~> 4.37.0)
     - BraintreeDropIn (= 8.1.4)
     - Flutter
 
@@ -61,8 +65,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Braintree: 94a20907b70aeffb29c40380eec583d783a347b6
   BraintreeDropIn: 073ef11637285efc5572b412079a34942c849ef9
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_braintree: 951a3b011f262c131cf1f29fe1207a5df49e13d9
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_braintree: 8ddf6d76385e1515004b85b54ca073480ab220c0
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 

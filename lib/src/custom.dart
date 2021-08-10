@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 
 import 'request.dart';
@@ -126,5 +128,32 @@ class Braintree {
       'request': request.toJson(),
     });
     return BraintreePaymentMethodNonce.fromJson(result);
+  }
+
+  static Future<BraintreePaymentMethodNonce> requestVenmoNonce(
+    String authorization,
+  ) async {
+    assert(authorization != null);
+
+    final result = await _kChannel.invokeMethod('requestVenmoNonce', {
+      'authorization': authorization,
+    });
+
+    return BraintreePaymentMethodNonce.fromJson(result);
+  }
+
+  static Future<bool> canMakePaymentsWithVenmo({String authorization}) async {
+    assert(authorization != null);
+
+    if (Platform.isIOS) {
+      final result = await _kChannel.invokeMethod('canMakePaymentsWithVenmo', {
+        'authorization': authorization,
+      });
+
+      return BraintreeCanMakePaymentsResult.fromJson(result)?.canMakePayments ??
+          false;
+    }
+
+    return true;
   }
 }

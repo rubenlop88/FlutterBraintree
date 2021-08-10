@@ -5,6 +5,7 @@ import BraintreeDropIn
 
 public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPlugin, BTViewControllerPresentingDelegate, BTThreeDSecureRequestDelegate {
     var applePayClient: BTApplePayClient?
+    var venmoDriver : BTVenmoDriver?
     var applePayFlutterResult: FlutterResult? // solo para apple pay
     var finishedApplePayWithResult: Bool = false
     
@@ -18,6 +19,8 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
         case requestPaypalNonce
         case canMakePaymentsWithApplePay
         case requestApplePayPayment
+        case requestVenmoNonce
+        case canMakePaymentsWithVenmo
     }
     
     public static func register(with registrar: FlutterPluginRegistrar) {
@@ -194,6 +197,17 @@ public class FlutterBraintreeCustomPlugin: BaseFlutterBraintreePlugin, FlutterPl
                                  currencyCode: currencyCode, merchantIdentifier: merchantIdentifier,
                                  summaryItem: summaryItem, supportedNetworks: FlutterBraintreeCustomPlugin.supportedNetworks)
             
+        } else if call.method == CallMethod.canMakePaymentsWithVenmo.rawValue {
+            let venmoDriver = BTVenmoDriver(apiClient: client!)
+            let canMakePayments = venmoDriver.isiOSAppAvailableForAppSwitch()
+            handleCanMakePaymentsResult(canMakePayments: canMakePayments, error: nil, flutterResult: result)
+            isHandlingResult = false
+        } else if call.method == CallMethod.requestVenmoNonce.rawValue {
+            self.venmoDriver = BTVenmoDriver(apiClient: client!)
+            self.venmoDriver?.authorizeAccountAndVault(true, completion: { [weak self] venmoAccountNonce, error in
+                self?.handleResult(nonce: venmoAccountNonce, error: error, flutterResult: result)
+                self?.isHandlingResult = false
+            })
         } else {
             result(FlutterMethodNotImplemented)
             self.isHandlingResult = false
