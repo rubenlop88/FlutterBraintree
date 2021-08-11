@@ -149,6 +149,22 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
             intent.putExtra("authorization", (String) call.argument("authorization"));
 
             activity.startActivityForResult(intent, CUSTOM_ACTIVITY_REQUEST_CODE);
+        } else if (call.method.equals("canMakePaymentsWithVenmo")) {
+            String authorization = call.argument("authorization");
+            Intent intent = new Intent(activity, FlutterBraintreeCustom.class);
+
+            intent.putExtra("type", call.method);
+            intent.putExtra("authorization", (String) call.argument("authorization"));
+
+            activity.startActivityForResult(intent, CUSTOM_ACTIVITY_REQUEST_CODE);
+        } else if (call.method.equals("requestVenmoNonce")) {
+            String authorization = call.argument("authorization");
+            Intent intent = new Intent(activity, FlutterBraintreeCustom.class);
+
+            intent.putExtra("type", call.method);
+            intent.putExtra("authorization", (String) call.argument("authorization"));
+
+            activity.startActivityForResult(intent, CUSTOM_ACTIVITY_REQUEST_CODE);
         } else if (call.method.equals("requestGooglePayPayment")) {
             String authorization = call.argument("authorization");
             Intent intent = new Intent(activity, FlutterBraintreeCustom.class);

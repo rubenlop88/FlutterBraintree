@@ -145,15 +145,11 @@ class Braintree {
   static Future<bool> canMakePaymentsWithVenmo({String authorization}) async {
     assert(authorization != null);
 
-    if (Platform.isIOS) {
-      final result = await _kChannel.invokeMethod('canMakePaymentsWithVenmo', {
-        'authorization': authorization,
-      });
+    final result = await _kChannel.invokeMethod('canMakePaymentsWithVenmo', {
+      'authorization': authorization,
+    });
 
-      return BraintreeCanMakePaymentsResult.fromJson(result)?.canMakePayments ??
-          false;
-    }
-
-    return true;
+    return BraintreeCanMakePaymentsResult.fromJson(result)?.canMakePayments ??
+        false;
   }
 }

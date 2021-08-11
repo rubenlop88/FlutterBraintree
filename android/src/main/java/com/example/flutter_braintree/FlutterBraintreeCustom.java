@@ -1,5 +1,6 @@
 package com.example.flutter_braintree;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -11,11 +12,15 @@ import com.braintreepayments.api.DataCollector;
 import com.braintreepayments.api.GooglePayment;
 import com.braintreepayments.api.PayPal;
 import com.braintreepayments.api.ThreeDSecure;
+import com.braintreepayments.api.Venmo;
 import com.braintreepayments.api.interfaces.BraintreeCancelListener;
 import com.braintreepayments.api.interfaces.BraintreeErrorListener;
 import com.braintreepayments.api.interfaces.BraintreeResponseListener;
+import com.braintreepayments.api.interfaces.ConfigurationListener;
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
+import com.braintreepayments.api.internal.SignatureVerification;
 import com.braintreepayments.api.models.CardBuilder;
+import com.braintreepayments.api.models.Configuration;
 import com.braintreepayments.api.models.GooglePaymentRequest;
 import com.braintreepayments.api.models.PayPalRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
@@ -27,7 +32,8 @@ import com.google.android.gms.wallet.WalletConstants;
 
 import java.util.HashMap;
 
-public class FlutterBraintreeCustom extends AppCompatActivity implements PaymentMethodNonceCreatedListener, BraintreeCancelListener, BraintreeErrorListener, BraintreeResponseListener<String> {
+public class FlutterBraintreeCustom extends AppCompatActivity
+        implements PaymentMethodNonceCreatedListener, BraintreeCancelListener, BraintreeErrorListener, BraintreeResponseListener<String> {
     private BraintreeFragment braintreeFragment;
 
     @Override
@@ -51,6 +57,10 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
                 requestPayPalDeviceData();
             } else if (type.equals("canMakePaymentsWithGooglePay")) {
                 isReadyToPlayWithGooglePlay();
+            } else if (type.equals("canMakePaymentsWithVenmo")) {
+                isVenmoEnabled();
+            } else if (type.equals("requestVenmoNonce")) {
+                requestVenmoNonce();
             } else if(type.equals("requestGooglePayPayment")) {
                 requestGooglePayPayment();
             }  else {
@@ -98,6 +108,24 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
 
             }
         });
+    }
+
+    protected void requestVenmoNonce() {
+        Venmo.authorizeAccount(braintreeFragment, true);
+    }
+
+    protected void isVenmoEnabled() {
+        boolean venmoEnabled = Venmo.isVenmoInstalled(getApplicationContext());
+
+        HashMap<String, Object> responseMap = new HashMap<String, Object>();
+        responseMap.put("canMakePayments", venmoEnabled);
+
+        Intent result = new Intent();
+        result.putExtra("type", "canMakePaymentsResponse");
+        result.putExtra("canMakePayments", responseMap);
+
+        setResult(RESULT_OK, result);
+        finish();
     }
 
     protected void requestDeviceData() {
