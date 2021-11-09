@@ -2,6 +2,7 @@ package com.example.flutter_braintree;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -118,6 +119,8 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
                 && !Objects.equals(threeDSecureVersion, ThreeDSecureRequest.VERSION_2)) {
             threeDSecureVersion = ThreeDSecureRequest.VERSION_1;
         }
+
+        Log.d("FlutterBraintree", "threeDSecureVersion: " + threeDSecureVersion);
 
         ThreeDSecureRequest threeDSecureRequest = new ThreeDSecureRequest()
                 .amount(intent.getStringExtra("amount"))
