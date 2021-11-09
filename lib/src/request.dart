@@ -319,12 +319,14 @@ class BraintreeThreeDSecureRequest {
   final String amount;
   final String nonce;
   final String email;
+  final String threeDSecureVersion;
   final BraintreeThreeDSecurePostalAddress address;
 
   BraintreeThreeDSecureRequest({
     this.amount,
     this.nonce,
     this.email,
+    this.threeDSecureVersion,
     this.address,
   });
 
@@ -332,12 +334,14 @@ class BraintreeThreeDSecureRequest {
     String amount,
     String nonce,
     String email,
+    String threeDSecureVersion,
     BraintreeThreeDSecurePostalAddress address,
   }) {
     return BraintreeThreeDSecureRequest(
       amount: amount ?? this.amount,
       nonce: nonce ?? this.nonce,
       email: email ?? this.email,
+      threeDSecureVersion: threeDSecureVersion ?? this.threeDSecureVersion,
       address: address ?? this.address,
     );
   }
@@ -347,6 +351,7 @@ class BraintreeThreeDSecureRequest {
       'amount': amount,
       'nonce': nonce,
       'email': email,
+      'threeDSecureVersion': threeDSecureVersion,
       'address': address?.toMap(),
     };
   }
@@ -358,6 +363,7 @@ class BraintreeThreeDSecureRequest {
       amount: map['amount'],
       nonce: map['nonce'],
       email: map['email'],
+      threeDSecureVersion: map['threeDSecureVersion'],
       address: BraintreeThreeDSecurePostalAddress.fromMap(map['address']),
     );
   }
@@ -369,6 +375,6 @@ class BraintreeThreeDSecureRequest {
 
   @override
   String toString() {
-    return 'BraintreeThreeDSecureRequest(amount: $amount, nonce: $nonce, email: $email, address: $address)';
+    return 'BraintreeThreeDSecureRequest(amount: $amount, nonce: $nonce, email: $email, threeDSecureVersion: $threeDSecureVersion, address: $address)';
   }
 }

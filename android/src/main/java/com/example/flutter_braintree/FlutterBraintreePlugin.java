@@ -136,6 +136,7 @@ public class FlutterBraintreePlugin implements FlutterPlugin, ActivityAware, Met
             intent.putExtra("amount", (String) request.get("amount"));
             intent.putExtra("nonce", (String) request.get("nonce"));
             intent.putExtra("email", (String) request.get("email"));
+            intent.putExtra("threeDSecureVersion", (String) request.get("threeDSecureVersion"));
 
             HashMap<String, String> address = (HashMap<String, String>) request.get("address");
             intent.putExtra("address", address);

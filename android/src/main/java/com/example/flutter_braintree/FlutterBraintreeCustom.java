@@ -26,6 +26,7 @@ import com.google.android.gms.wallet.TransactionInfo;
 import com.google.android.gms.wallet.WalletConstants;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class FlutterBraintreeCustom extends AppCompatActivity implements PaymentMethodNonceCreatedListener, BraintreeCancelListener, BraintreeErrorListener, BraintreeResponseListener<String> {
     private BraintreeFragment braintreeFragment;
@@ -111,11 +112,18 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
     protected void threeDSecureRequest() {
         Intent intent = getIntent();
 
+        String threeDSecureVersion = intent.getStringExtra("threeDSecureVersion");
+
+        if (!Objects.equals(threeDSecureVersion, ThreeDSecureRequest.VERSION_1)
+                && !Objects.equals(threeDSecureVersion, ThreeDSecureRequest.VERSION_2)) {
+            threeDSecureVersion = ThreeDSecureRequest.VERSION_1;
+        }
+
         ThreeDSecureRequest threeDSecureRequest = new ThreeDSecureRequest()
                 .amount(intent.getStringExtra("amount"))
                 .email(intent.getStringExtra("email"))
                 .nonce(intent.getStringExtra("nonce"))
-                .versionRequested(ThreeDSecureRequest.VERSION_2);
+                .versionRequested(threeDSecureVersion);
 
         HashMap<String, String> addressInfo = (HashMap<String, String>) intent.getSerializableExtra("address");
 
