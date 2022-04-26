@@ -28,14 +28,22 @@ import com.google.android.gms.wallet.WalletConstants;
 
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class FlutterBraintreeCustom extends AppCompatActivity implements PaymentMethodNonceCreatedListener, BraintreeCancelListener, BraintreeErrorListener, BraintreeResponseListener<String> {
+    public static final ExecutorService executorService = Executors.newCachedThreadPool();
+
     private BraintreeFragment braintreeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flutter_braintree_custom);
+        executorService.execute(this::initBraintreeFragment);
+    }
+
+    private void initBraintreeFragment() {
         try {
             Intent intent = getIntent();
             String type = intent.getStringExtra("type");
@@ -193,7 +201,7 @@ public class FlutterBraintreeCustom extends AppCompatActivity implements Payment
         nonceMap.put("typeLabel", paymentMethodNonce.getTypeLabel());
         nonceMap.put("description", paymentMethodNonce.getDescription());
         nonceMap.put("isDefault", paymentMethodNonce.isDefault());
-        
+
         Intent result = new Intent();
         result.putExtra("type", "paymentMethodNonce");
         result.putExtra("paymentMethodNonce", nonceMap);
